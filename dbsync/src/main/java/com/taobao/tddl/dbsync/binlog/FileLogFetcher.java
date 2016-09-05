@@ -107,6 +107,7 @@ public final class FileLogFetcher extends LogFetcher {
      */
     public boolean fetch() throws IOException {
         if (limit == 0) {
+            //打开文件第一次读取,默认buffer大小长度的数据
             final int len = fin.read(buffer, 0, buffer.length);
             if (len >= 0) {
                 limit += len;

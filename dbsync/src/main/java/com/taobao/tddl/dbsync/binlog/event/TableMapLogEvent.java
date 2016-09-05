@@ -370,11 +370,13 @@ public final class TableMapLogEvent extends LogEvent {
         columnCnt = (int) buffer.getPackedLong();
         columnInfo = new ColumnInfo[columnCnt];
         for (int i = 0; i < columnCnt; i++) {
+            //列类型定义,每个字段一个字节,所以这里没有field的meta信息,只有type信息
             ColumnInfo info = new ColumnInfo();
             info.type = buffer.getUint8();
             columnInfo[i] = info;
         }
 
+        //读取column meta def
         if (buffer.position() < buffer.limit()) {
             final int fieldSize = (int) buffer.getPackedLong();
             decodeFields(buffer, fieldSize);

@@ -18,6 +18,8 @@ public class LogBuffer {
 
     protected byte[] buffer;
 
+    //origin 用于记录每个event的起始位置,每解析完毕一个event都会修改该值为nextEventPosition,
+    //limit用于限制改buffer 最大能读取的位置,每次读取event header后,该值为event length, 所以remaining = (origin+limit)-position
     protected int    origin, limit;
     protected int    position;
 
@@ -25,7 +27,7 @@ public class LogBuffer {
     }
 
     public LogBuffer(byte[] buffer, final int origin, final int limit){
-        if (origin + limit > buffer.length) throw new IllegalArgumentException("capacity excceed: " + (origin + limit));
+        if (origin + limit > buffer.length) throw new IllegalArgumentException("capacity exceed: " + (origin + limit));
 
         this.buffer = buffer;
         this.origin = origin;

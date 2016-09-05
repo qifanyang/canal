@@ -92,7 +92,7 @@ public class BaseLogFetcherTest {
         final ColumnInfo[] columnInfo = map.getColumnInfo();
 
         for (int i = 0; i < columnCnt; i++) {
-            if (!cols.get(i)) {
+            if (!cols.get(i)) {//列是否为空
                 continue;
             }
 

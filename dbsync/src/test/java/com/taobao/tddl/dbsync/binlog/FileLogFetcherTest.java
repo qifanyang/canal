@@ -17,6 +17,9 @@ import com.taobao.tddl.dbsync.binlog.event.WriteRowsLogEvent;
 import com.taobao.tddl.dbsync.binlog.event.XidLogEvent;
 import com.taobao.tddl.dbsync.binlog.event.mariadb.AnnotateRowsEvent;
 
+/**
+ * 解析binlog文件
+ */
 public class FileLogFetcherTest extends BaseLogFetcherTest {
 
     private String directory;
@@ -35,8 +38,8 @@ public class FileLogFetcherTest extends BaseLogFetcherTest {
             LogDecoder decoder = new LogDecoder(LogEvent.UNKNOWN_EVENT, LogEvent.ENUM_END_EVENT);
             LogContext context = new LogContext();
 
-            File current = new File(directory, "mysql-bin.000001");
-            fetcher.open(current, 2051L);
+            File current = new File(directory, "mysql-bin.000024");
+            fetcher.open(current, 0L);
             context.setLogPosition(new LogPosition(current.getName()));
 
             while (fetcher.fetch()) {
