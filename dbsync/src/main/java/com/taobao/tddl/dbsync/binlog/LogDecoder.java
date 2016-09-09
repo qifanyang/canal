@@ -95,7 +95,7 @@ public final class LogDecoder {
             LogHeader header = new LogHeader(buffer, context.getFormatDescription());
 
             final int len = header.getEventLen();
-            if (limit >= len) {
+            if (limit >= len) {//limit < len 数据不足以构建一个event,返回空,继续fetch数据
                 LogEvent event;
 
                 /* Checking binary-log's header */

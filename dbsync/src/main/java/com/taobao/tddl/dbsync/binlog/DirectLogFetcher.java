@@ -293,6 +293,7 @@ public final class DirectLogFetcher extends LogFetcher {
             }
 
             // Detecting error code.
+            //Network streams are requested with COM_BINLOG_DUMP and prepend each Binlog Event with 00 OK-byte
             final int mark = getUint8(NET_HEADER_SIZE);
             if (mark != 0) {
                 if (mark == 255) // error from master
@@ -319,6 +320,7 @@ public final class DirectLogFetcher extends LogFetcher {
             }
 
             // The first packet is a multi-packet, concatenate the packets.
+            //初始化可能会有很多binlog,所以会分包每个包16M
             while (netlen == MAX_PACKET_LENGTH) {
                 if (!fetch0(0, NET_HEADER_SIZE)) {
                     logger.warn("Reached end of input stream while fetching header");

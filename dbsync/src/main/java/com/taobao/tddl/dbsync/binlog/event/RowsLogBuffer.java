@@ -61,7 +61,7 @@ public final class RowsLogBuffer {
             int column = 0;
 
             for (int i = 0; i < columnLen; i++)
-                if (columns.get(i)) column++;
+                if (columns.get(i)) column++;//根据column_image bitmap中是否为空判断列值数量
 
             nullBitIndex = 0;
             nullBits.clear();
@@ -357,9 +357,20 @@ public final class RowsLogBuffer {
                 break;
             }
             case LogEvent.MYSQL_TYPE_BIT: {
+//                <tr>
+//                <td>MYSQL_TYPE_BIT</td><td>16</td>
+//                <td>2 bytes</td>
+//                <td>A 1 byte unsigned int representing the length in bits of the
+//                bitfield (0 to 64), followed by a 1 byte unsigned int
+//                representing the number of bytes occupied by the bitfield.  The
+//                number of bytes is either int((length + 7) / 8) or int(length / 8).
+//                        </td>
+//                </tr>
+                //上面5.7文档的描述第一字节应该是bit定义的长度,第二自己是bytes数量,测试用的5.6
+                //9bit > meta=257,   3bit  meta=3  ,所以meta第一字节表示byte数量, 第二字节表示余下的bit
                 /* Meta-data: bit_len, bytes_in_rec, 2 bytes */
                 final int nbits = ((meta >> 8) * 8) + (meta & 0xff);
-                len = (nbits + 7) / 8;
+                len = (nbits + 7) / 8;//字节数量
                 if (nbits > 1) {
                     // byte[] bits = new byte[len];
                     // buffer.fillBytes(bits, 0, len);

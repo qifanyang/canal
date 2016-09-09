@@ -29,7 +29,7 @@ public class DirectLogFetcherTest extends BaseLogFetcherTest {
             statement.execute("SET @master_binlog_checksum='@@global.binlog_checksum'");
             statement.execute("SET @mariadb_slave_capability='" + LogEvent.MARIA_SLAVE_CAPABILITY_MINE + "'");
 
-            fecther.open(connection, "mysql-bin.000023", 4L, 10);
+            fecther.open(connection, "mysql-bin.000023", 4L, 3);
 
             LogDecoder decoder = new LogDecoder(LogEvent.UNKNOWN_EVENT, LogEvent.ENUM_END_EVENT);
             LogContext context = new LogContext();

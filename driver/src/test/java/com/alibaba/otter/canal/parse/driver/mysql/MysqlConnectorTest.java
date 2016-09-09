@@ -14,13 +14,13 @@ public class MysqlConnectorTest {
     @Test
     public void testQuery() {
 
-        MysqlConnector connector = new MysqlConnector(new InetSocketAddress("127.0.0.1", 3306), "xxxxx", "xxxxx");
+        MysqlConnector connector = new MysqlConnector(new InetSocketAddress("127.0.0.1", 3306), "root", "");
         try {
             connector.connect();
             MysqlQueryExecutor executor = new MysqlQueryExecutor(connector);
             ResultSetPacket result = executor.query("show variables like '%char%';");
             System.out.println(result);
-            result = executor.query("select * from test.test1");
+            result = executor.query("select * from test.user");
             System.out.println(result);
         } catch (IOException e) {
             Assert.fail(e.getMessage());

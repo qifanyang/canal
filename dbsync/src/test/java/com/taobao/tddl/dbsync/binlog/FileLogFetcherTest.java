@@ -33,12 +33,13 @@ public class FileLogFetcherTest extends BaseLogFetcherTest {
 
     @Test
     public void testSimple() {
+//        FileLogFetcher fetcher = new FileLogFetcher(1024 * 16);
         FileLogFetcher fetcher = new FileLogFetcher(1024 * 16);
         try {
             LogDecoder decoder = new LogDecoder(LogEvent.UNKNOWN_EVENT, LogEvent.ENUM_END_EVENT);
             LogContext context = new LogContext();
 
-            File current = new File(directory, "mysql-bin.000024");
+            File current = new File(directory, "mysql-bin.000025");
             fetcher.open(current, 0L);
             context.setLogPosition(new LogPosition(current.getName()));
 

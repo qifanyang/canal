@@ -16,7 +16,7 @@ import com.taobao.tddl.dbsync.binlog.event.mariadb.AnnotateRowsEvent;
 
 public class BaseLogFetcherTest {
 
-    protected String  binlogFileName = "mysql-bin.000001";
+    protected String  binlogFileName = "mysql-bin.000026";
     protected Charset charset        = Charset.forName("utf-8");
 
     protected void parseQueryEvent(QueryLogEvent event) {
@@ -24,25 +24,25 @@ public class BaseLogFetcherTest {
             binlogFileName,
             event.getHeader().getLogPos() - event.getHeader().getEventLen(),
             event.getCatalog()));
-        System.out.println("sql : " + event.getQuery());
+        System.out.println("sql parseQueryEvent: " + event.getQuery());
     }
 
     protected void parseRowsQueryEvent(RowsQueryLogEvent event) throws Exception {
         System.out.println(String.format("================> binlog[%s:%s]", binlogFileName, event.getHeader()
             .getLogPos() - event.getHeader().getEventLen()));
-        System.out.println("sql : " + new String(event.getRowsQuery().getBytes("ISO-8859-1"), charset.name()));
+        System.out.println("sql parseQueryEvent: " + new String(event.getRowsQuery().getBytes("ISO-8859-1"), charset.name()));
     }
 
     protected void parseAnnotateRowsEvent(AnnotateRowsEvent event) throws Exception {
         System.out.println(String.format("================> binlog[%s:%s]", binlogFileName, event.getHeader()
             .getLogPos() - event.getHeader().getEventLen()));
-        System.out.println("sql : " + new String(event.getRowsQuery().getBytes("ISO-8859-1"), charset.name()));
+        System.out.println("sql parseAnnotateRowsEvent: " + new String(event.getRowsQuery().getBytes("ISO-8859-1"), charset.name()));
     }
 
     protected void parseXidEvent(XidLogEvent event) throws Exception {
         System.out.println(String.format("================> binlog[%s:%s]", binlogFileName, event.getHeader()
             .getLogPos() - event.getHeader().getEventLen()));
-        System.out.println("xid : " + event.getXid());
+        System.out.println("xid parseAnnotateRowsEvent: " + event.getXid());
     }
 
     protected void parseRowsEvent(RowsLogEvent event) {
@@ -101,6 +101,7 @@ public class BaseLogFetcherTest {
 
             if (buffer.isNull()) {
                 //
+                System.out.println("null");
             } else {
                 final Serializable value = buffer.getValue();
                 if (value instanceof byte[]) {

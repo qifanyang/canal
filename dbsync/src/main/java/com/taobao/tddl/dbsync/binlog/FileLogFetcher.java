@@ -118,6 +118,7 @@ public final class FileLogFetcher extends LogFetcher {
                 return true;
             }
         } else if (origin == 0) {
+            //只有第一个事件origin才会==0
             if (limit > buffer.length / 2) {
                 ensureCapacity(buffer.length + limit);
             }
@@ -129,9 +130,18 @@ public final class FileLogFetcher extends LogFetcher {
                 return true;
             }
         } else if (limit > 0) {
+            //如果一个binlog文件小于初始化buffer容量,解析完format description event之后继续调用fetch
+            //导致没办法从数据文件中读取到新的数据,然后返回false,就不会解析已经加载到buffer中的event了
+            boolean hasRemaining = false;
+            if(position < limit){
+                //还有数据需要解析
+                hasRemaining = true;
+            }
+            //binlog文件可能会很大,循环使用LogBuffer,把解析过的event空间让出来读取新的event
             System.arraycopy(buffer, origin, buffer, 0, limit);
             position -= origin;
-            origin = 0;
+            origin = 0;//因为已经消费过的event被擦除了,所以origin=0
+            //fuck 文件比较小的时候,第一次使用16K的空间就把文件读取完毕了,while(fetch())循环使用返回false,根本不会解析其它event
             final int len = fin.read(buffer, limit, buffer.length - limit);
             if (len >= 0) {
                 limit += len;
@@ -139,10 +149,14 @@ public final class FileLogFetcher extends LogFetcher {
                 /* More binlog to fetch */
                 return true;
             }
+            if(hasRemaining){
+                return true;
+            }
         } else {
             /* Should not happen. */
             throw new IllegalArgumentException("Unexcepted limit: " + limit);
         }
+
 
         /* Reach binlog file end */
         return false;
