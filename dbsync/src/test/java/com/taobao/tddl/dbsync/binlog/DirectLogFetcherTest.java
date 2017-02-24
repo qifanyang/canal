@@ -24,12 +24,16 @@ public class DirectLogFetcherTest extends BaseLogFetcherTest {
         DirectLogFetcher fecther = new DirectLogFetcher();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306", "root", "");
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306", "root", "");
+            String url = "jdbc:mysql://rdst5ai4d32fe3qd6if46public.mysql.rds.aliyuncs.com:3306/calm_dev";
+            String user = "uprd_stf_qry";
+            String passwd = "dZZglXoOrJ5WfgvVOnPh";
+            Connection connection = DriverManager.getConnection(url, user, passwd);
             Statement statement = connection.createStatement();
             statement.execute("SET @master_binlog_checksum='@@global.binlog_checksum'");
             statement.execute("SET @mariadb_slave_capability='" + LogEvent.MARIA_SLAVE_CAPABILITY_MINE + "'");
 
-            fecther.open(connection, "mysql-bin.000023", 4L, 3);
+            fecther.open(connection, "mysql-bin.006773", 12488L, 100);
 
             LogDecoder decoder = new LogDecoder(LogEvent.UNKNOWN_EVENT, LogEvent.ENUM_END_EVENT);
             LogContext context = new LogContext();
